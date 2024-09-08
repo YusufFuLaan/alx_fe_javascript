@@ -42,7 +42,7 @@ function addQuote() {
         displayQuotes();
         document.getElementById('newQuoteText').value = '';
         document.getElementById('newQuoteCategory').value = '';
-        sendQuoteToServer(newQuote); // Send new quote to server
+        syncQuotes(); // Sync quotes with server
     } else {
         alert('Please enter both quote and category.');
     }
@@ -65,7 +65,7 @@ function displayQuotes() {
             quotes.splice(index, 1);
             saveQuotes();
             displayQuotes();
-            removeQuoteFromServer(quote); // Remove quote from server
+            syncQuotes(); // Sync quotes with server
         });
 
         li.appendChild(removeButton);
@@ -123,7 +123,7 @@ function filterQuotes() {
             quotes.splice(index, 1);
             saveQuotes();
             displayQuotes();
-            removeQuoteFromServer(quote); // Remove quote from server
+            syncQuotes(); // Sync quotes with server
         });
 
         li.appendChild(removeButton);
@@ -208,5 +208,20 @@ async function removeQuoteFromServer(quote) {
         });
     } catch (error) {
         console.error('Error removing quote from server:', error);
+    }
+}
+
+// Function to sync local quotes with the server
+async function syncQuotes() {
+    try {
+        // Send all local quotes to the server
+        for (const quote of quotes) {
+            await sendQuoteToServer(quote);
+        }
+
+        // Fetch updated quotes from server and update local storage
+        await fetchQuotesFromServer();
+    } catch (error) {
+        console.error('Error syncing quotes:', error);
     }
 }

@@ -88,6 +88,9 @@ function populateCategories() {
     const categories = new Set(quotes.map(q => q.category));
     const categoryFilter = document.getElementById('categoryFilter');
 
+    // Clear existing options
+    categoryFilter.innerHTML = '<option value="all">All Categories</option>';
+
     categories.forEach(category => {
         const option = document.createElement('option');
         option.value = category;
@@ -157,20 +160,22 @@ function importFromJsonFile(event) {
 }
 
 // Function to fetch quotes from a simulated server
-function fetchQuotesFromServer() {
-    fetch('https://jsonplaceholder.typicode.com/posts') // Simulate server API
-        .then(response => response.json())
-        .then(data => {
-            // Simulate merging server data with local data
-            const serverQuotes = data.map(item => ({ text: item.title, category: 'general' }));
-            if (serverQuotes.length > 0) {
-                // Example conflict resolution: server data takes precedence
-                quotes = serverQuotes;
-                saveQuotes();
-                displayQuotes();
-                populateCategories();
-                alert('Quotes updated from server!');
-            }
-        })
-        .catch(error => console.error('Error fetching quotes from server:', error));
+async function fetchQuotesFromServer() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        const data = await response.json();
+        
+        // Simulate server data
+        const serverQuotes = data.map(item => ({ text: item.title, category: 'general' }));
+        if (serverQuotes.length > 0) {
+            // Example conflict resolution: server data takes precedence
+            quotes = serverQuotes;
+            saveQuotes();
+            displayQuotes();
+            populateCategories();
+            alert('Quotes updated from server!');
+        }
+    } catch (error) {
+        console.error('Error fetching quotes from server:', error);
+    }
 }

@@ -22,6 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load quotes and categories from local storage
     loadQuotes();
     populateCategories();
+
+    // Fetch quotes from server periodically
+    setInterval(fetchQuotesFromServer, 60000); // Fetch every 60 seconds
 });
 
 // Initialize quotes array
@@ -151,4 +154,23 @@ function importFromJsonFile(event) {
         }
     };
     fileReader.readAsText(event.target.files[0]);
+}
+
+// Function to fetch quotes from a simulated server
+function fetchQuotesFromServer() {
+    fetch('https://jsonplaceholder.typicode.com/posts') // Simulate server API
+        .then(response => response.json())
+        .then(data => {
+            // Simulate merging server data with local data
+            const serverQuotes = data.map(item => ({ text: item.title, category: 'general' }));
+            if (serverQuotes.length > 0) {
+                // Example conflict resolution: server data takes precedence
+                quotes = serverQuotes;
+                saveQuotes();
+                displayQuotes();
+                populateCategories();
+                alert('Quotes updated from server!');
+            }
+        })
+        .catch(error => console.error('Error fetching quotes from server:', error));
 }

@@ -84,3 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('quoteDisplay').innerHTML = `"${lastViewedQuote.text}" - ${lastViewedQuote.category}`;
     }
 });
+
+
+// Implementing Web Storage and JSON Handling

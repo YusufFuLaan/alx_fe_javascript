@@ -5,17 +5,17 @@ let quotes = [
     { text: "Success is not the key to happiness. Happiness is the key to success.", category: "Success" }
 ];
 
-// Function to show a random quote
+// Function to show a random quote using innerHTML
 function showRandomQuote() {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
     
-    // Display the random quote
+    // Use innerHTML to update the quote display with HTML structure
     const quoteDisplay = document.getElementById("quoteDisplay");
-    quoteDisplay.textContent = `"${randomQuote.text}" - ${randomQuote.category}`;
+    quoteDisplay.innerHTML = `<p>"${randomQuote.text}"</p><p><strong>Category:</strong> ${randomQuote.category}</p>`;
 }
 
-// Function to add a new quote
+// Function to add a new quote using innerHTML
 function addQuote() {
     const newQuoteText = document.getElementById("newQuoteText").value;
     const newQuoteCategory = document.getElementById("newQuoteCategory").value;
@@ -30,7 +30,9 @@ function addQuote() {
         document.getElementById("newQuoteText").value = "";
         document.getElementById("newQuoteCategory").value = "";
 
-        // Notify the user that the quote has been added
+        // Notify the user that the quote has been added and render it using innerHTML
+        document.getElementById("quoteDisplay").innerHTML = `<p>New quote added: "${newQuoteText}"</p><p><strong>Category:</strong> ${newQuoteCategory}</p>`;
+
         alert("New quote added successfully!");
     } else {
         alert("Please fill in both the quote and category.");
@@ -39,3 +41,8 @@ function addQuote() {
 
 // Add event listener to the "Show New Quote" button
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+
+// On page load, show a message using innerHTML
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("quoteDisplay").innerHTML = `<p>Click "Show New Quote" to display a random quote</p>`;
+});

@@ -5,17 +5,26 @@ let quotes = [
     { text: "Success is not the key to happiness. Happiness is the key to success.", category: "Success" }
 ];
 
-// Function to show a random quote using innerHTML
+// Function to show a random quote
 function showRandomQuote() {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const randomQuote = quotes[randomIndex];
 
-    // Use innerHTML to update the quote display with HTML structure
+    // Create elements for displaying the quote
     const quoteDisplay = document.getElementById("quoteDisplay");
-    quoteDisplay.innerHTML = `<p>"${randomQuote.text}"</p><p><strong>Category:</strong> ${randomQuote.category}</p>`;
+    quoteDisplay.innerHTML = ''; // Clear previous content
+
+    const quoteParagraph = document.createElement("p");
+    quoteParagraph.textContent = `"${randomQuote.text}"`;
+    
+    const categoryParagraph = document.createElement("p");
+    categoryParagraph.innerHTML = `<strong>Category:</strong> ${randomQuote.category}`;
+    
+    quoteDisplay.appendChild(quoteParagraph);
+    quoteDisplay.appendChild(categoryParagraph);
 }
 
-// Function to add a new quote using innerHTML
+// Function to add a new quote
 function addQuote() {
     const newQuoteText = document.getElementById("newQuoteText").value;
     const newQuoteCategory = document.getElementById("newQuoteCategory").value;
@@ -30,8 +39,18 @@ function addQuote() {
         document.getElementById("newQuoteText").value = "";
         document.getElementById("newQuoteCategory").value = "";
 
-        // Notify the user that the quote has been added and render it using innerHTML
-        document.getElementById("quoteDisplay").innerHTML = `<p>New quote added: "${newQuoteText}"</p><p><strong>Category:</strong> ${newQuoteCategory}</p>`;
+        // Notify the user and update the display
+        const quoteDisplay = document.getElementById("quoteDisplay");
+        quoteDisplay.innerHTML = ''; // Clear previous content
+        
+        const newQuoteParagraph = document.createElement("p");
+        newQuoteParagraph.textContent = `New quote added: "${newQuoteText}"`;
+
+        const newCategoryParagraph = document.createElement("p");
+        newCategoryParagraph.innerHTML = `<strong>Category:</strong> ${newQuoteCategory}`;
+        
+        quoteDisplay.appendChild(newQuoteParagraph);
+        quoteDisplay.appendChild(newCategoryParagraph);
 
         alert("New quote added successfully!");
     } else {
@@ -39,25 +58,47 @@ function addQuote() {
     }
 }
 
-// Function to dynamically create the add-quote form using innerHTML
+// Function to dynamically create the add-quote form
 function createAddQuoteForm() {
-    // Use innerHTML to generate the form structure
     const formContainer = document.getElementById("formContainer");
-    formContainer.innerHTML = `
-        <div>
-            <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-            <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-            <button onclick="addQuote()">Add Quote</button>
-        </div>
-    `;
+    
+    // Create elements for the form
+    const formDiv = document.createElement("div");
+
+    const inputText = document.createElement("input");
+    inputText.id = "newQuoteText";
+    inputText.type = "text";
+    inputText.placeholder = "Enter a new quote";
+    
+    const inputCategory = document.createElement("input");
+    inputCategory.id = "newQuoteCategory";
+    inputCategory.type = "text";
+    inputCategory.placeholder = "Enter quote category";
+    
+    const addButton = document.createElement("button");
+    addButton.textContent = "Add Quote";
+    addButton.onclick = addQuote;
+
+    // Append elements to formDiv
+    formDiv.appendChild(inputText);
+    formDiv.appendChild(inputCategory);
+    formDiv.appendChild(addButton);
+
+    // Append formDiv to formContainer
+    formContainer.appendChild(formDiv);
 }
 
 // Add event listener to the "Show New Quote" button
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 
-// On page load, show a message using innerHTML and create the add-quote form
+// On page load, show a message and create the add-quote form
 document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("quoteDisplay").innerHTML = `<p>Click "Show New Quote" to display a random quote</p>`;
+    const quoteDisplay = document.getElementById("quoteDisplay");
+    
+    const initialMessage = document.createElement("p");
+    initialMessage.textContent = "Click 'Show New Quote' to display a random quote";
+    
+    quoteDisplay.appendChild(initialMessage);
     
     // Call the function to create the add-quote form
     createAddQuoteForm();

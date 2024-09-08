@@ -1,15 +1,40 @@
+/* Optional CSS for styling */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
     text-align: center;
     padding: 20px;
 }
+
+h1 {
+    color: #333;
+}
+
 #quoteDisplay {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
     margin: 20px 0;
-    padding: 10px;
-    font-size: 1.5em;
-    background-color: #f0f0f0;
     border-radius: 8px;
 }
-.input-group {
-    margin-bottom: 10px;
+
+input[type="text"] {
+    padding: 10px;
+    width: 250px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
 }

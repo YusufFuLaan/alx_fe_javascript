@@ -221,6 +221,9 @@ async function syncQuotes() {
 
         // Fetch updated quotes from server and update local storage
         await fetchQuotesFromServer();
+        
+        // Notify the user that quotes have been synced
+        alert('Quotes synced with server!');
     } catch (error) {
         console.error('Error syncing quotes:', error);
     }

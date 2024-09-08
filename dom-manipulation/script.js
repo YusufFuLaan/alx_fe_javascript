@@ -42,6 +42,7 @@ function addQuote() {
         displayQuotes();
         document.getElementById('newQuoteText').value = '';
         document.getElementById('newQuoteCategory').value = '';
+        sendQuoteToServer(newQuote); // Send new quote to server
     } else {
         alert('Please enter both quote and category.');
     }
@@ -64,6 +65,7 @@ function displayQuotes() {
             quotes.splice(index, 1);
             saveQuotes();
             displayQuotes();
+            removeQuoteFromServer(quote); // Remove quote from server
         });
 
         li.appendChild(removeButton);
@@ -121,6 +123,7 @@ function filterQuotes() {
             quotes.splice(index, 1);
             saveQuotes();
             displayQuotes();
+            removeQuoteFromServer(quote); // Remove quote from server
         });
 
         li.appendChild(removeButton);
@@ -177,5 +180,33 @@ async function fetchQuotesFromServer() {
         }
     } catch (error) {
         console.error('Error fetching quotes from server:', error);
+    }
+}
+
+// Function to send a new quote to the server
+async function sendQuoteToServer(quote) {
+    try {
+        await fetch('https://jsonplaceholder.typicode.com/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(quote)
+        });
+    } catch (error) {
+        console.error('Error sending quote to server:', error);
+    }
+}
+
+// Function to remove a quote from the server
+async function removeQuoteFromServer(quote) {
+    try {
+        // Simulate removing quote from server
+        // In a real-world scenario, you would need the ID of the item to remove
+        await fetch('https://jsonplaceholder.typicode.com/posts/1', { // Example URL
+            method: 'DELETE'
+        });
+    } catch (error) {
+        console.error('Error removing quote from server:', error);
     }
 }

@@ -1,8 +1,12 @@
-/* Optional CSS for styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    text-align: center;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
     padding: 20px;
 }
 
@@ -11,30 +15,60 @@ h1 {
 }
 
 #quoteDisplay {
-    background-color: #fff;
+    background: #fff;
     border: 1px solid #ddd;
+    border-radius: 4px;
     padding: 20px;
-    margin: 20px 0;
-    border-radius: 8px;
-}
-
-input[type="text"] {
-    padding: 10px;
-    width: 250px;
-    margin: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
 }
 
 button {
-    padding: 10px 20px;
     background-color: #007bff;
-    color: #fff;
+    color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
+    padding: 10px 20px;
     cursor: pointer;
+    margin: 5px;
+    font-size: 16px;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 5px;
+    width: calc(100% - 22px);
+    max-width: 300px;
+}
+
+input[type="file"] {
+    margin: 5px;
+}
+
+input[type="text"]::placeholder {
+    color: #999;
+}
+
+button {
+    padding: 10px 20px;
+}
+
+#exportQuotes {
+    background-color: #28a745;
+}
+
+#exportQuotes:hover {
+    background-color: #218838;
+}
+
+#importFile {
+    margin-right: 10px;
 }

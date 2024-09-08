@@ -1,93 +1,133 @@
-const quotes = JSON.parse(localStorage.getItem('quotes') || '[]');
-const categoryFilter = document.getElementById('categoryFilter');
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('addQuote');
+    const exportButton = document.getElementById('exportButton');
+    const importFileInput = document.getElementById('importFile');
+    const categoryFilter = document.getElementById('categoryFilter');
 
-// Initialize the app
-document.addEventListener('DOMContentLoaded', () => {
-    populateCategories();
+    // Event listeners
+    if (addButton) {
+        addButton.addEventListener('click', addQuote);
+    }
+    if (exportButton) {
+        exportButton.addEventListener('click', exportToJson);
+    }
+    if (importFileInput) {
+        importFileInput.addEventListener('change', importFromJsonFile);
+    }
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', filterQuotes);
+    }
+
+    // Load quotes and categories from local storage
     loadQuotes();
-    // Restore last selected filter
-    const lastCategory = localStorage.getItem('lastCategory') || 'all';
-    categoryFilter.value = lastCategory;
-    filterQuotes();
+    populateCategories();
 });
 
-// Populate categories dynamically
-function populateCategories() {
-    const categories = new Set(quotes.map(q => q.category));
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat;
-        option.textContent = cat;
-        categoryFilter.appendChild(option);
+// Initialize quotes array
+let quotes = [];
+
+// Function to add a new quote
+function addQuote() {
+    const quoteText = document.getElementById('newQuoteText').value.trim();
+    const quoteCategory = document.getElementById('newQuoteCategory').value.trim();
+
+    if (quoteText && quoteCategory) {
+        const newQuote = { text: quoteText, category: quoteCategory };
+        quotes.push(newQuote);
+        saveQuotes();
+        displayQuotes();
+        document.getElementById('newQuoteText').value = '';
+        document.getElementById('newQuoteCategory').value = '';
+    } else {
+        alert('Please enter both quote and category.');
+    }
+}
+
+// Function to display quotes
+function displayQuotes() {
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    quoteDisplay.innerHTML = ''; // Clear existing quotes
+
+    quotes.forEach((quote, index) => {
+        const li = document.createElement('li');
+        li.textContent = `"${quote.text}" — ${quote.category}`;
+        
+        // Create remove button
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className = 'remove-btn';
+        removeButton.addEventListener('click', () => {
+            quotes.splice(index, 1);
+            saveQuotes();
+            displayQuotes();
+        });
+
+        li.appendChild(removeButton);
+        quoteDisplay.appendChild(li);
     });
 }
 
-// Show a random quote
-function showRandomQuote() {
-    if (quotes.length === 0) return;
-
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    const quote = quotes[randomIndex];
-    const quoteDisplay = document.getElementById('quoteDisplay');
-
-    quoteDisplay.innerHTML = `
-        <p><strong>${quote.text}</strong></p>
-        <p>— ${quote.category}</p>
-    `;
-}
-
-// Add a new quote
-function addQuote() {
-    const text = document.getElementById('newQuoteText').value.trim();
-    const category = document.getElementById('newQuoteCategory').value.trim();
-    
-    if (!text || !category) {
-        alert('Please enter both quote and category.');
-        return;
-    }
-
-    const newQuote = { text, category };
-    quotes.push(newQuote);
-    saveQuotes();
-    populateCategories();  // Update category filter options
-    showRandomQuote();
-}
-
-// Save quotes to local storage
+// Function to save quotes to local storage
 function saveQuotes() {
     localStorage.setItem('quotes', JSON.stringify(quotes));
 }
 
-// Load quotes from local storage
+// Function to load quotes from local storage
 function loadQuotes() {
-    quotes.forEach(quote => {
+    const storedQuotes = JSON.parse(localStorage.getItem('quotes') || '[]');
+    quotes = storedQuotes;
+    displayQuotes();
+}
+
+// Function to populate categories in the filter dropdown
+function populateCategories() {
+    const categories = new Set(quotes.map(q => q.category));
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    categories.forEach(category => {
         const option = document.createElement('option');
-        option.value = quote.category;
-        option.textContent = quote.category;
+        option.value = category;
+        option.textContent = category;
         categoryFilter.appendChild(option);
     });
 }
 
-// Filter quotes based on selected category
+// Function to filter quotes by selected category
 function filterQuotes() {
-    const selectedCategory = categoryFilter.value;
-    localStorage.setItem('lastCategory', selectedCategory);
+    const selectedCategory = document.getElementById('categoryFilter').value;
+    const filteredQuotes = selectedCategory === 'all'
+        ? quotes
+        : quotes.filter(q => q.category === selectedCategory);
 
-    const filteredQuotes = selectedCategory === 'all' ? quotes : quotes.filter(q => q.category === selectedCategory);
     const quoteDisplay = document.getElementById('quoteDisplay');
-    
-    quoteDisplay.innerHTML = '';
-    filteredQuotes.forEach(quote => {
-        const quoteElement = document.createElement('div');
-        quoteElement.innerHTML = `<p><strong>${quote.text}</strong></p><p>— ${quote.category}</p>`;
-        quoteDisplay.appendChild(quoteElement);
+    quoteDisplay.innerHTML = ''; // Clear existing quotes
+
+    filteredQuotes.forEach((quote, index) => {
+        const li = document.createElement('li');
+        li.textContent = `"${quote.text}" — ${quote.category}`;
+        
+        // Create remove button
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className = 'remove-btn';
+        removeButton.addEventListener('click', () => {
+            quotes.splice(index, 1);
+            saveQuotes();
+            displayQuotes();
+        });
+
+        li.appendChild(removeButton);
+        quoteDisplay.appendChild(li);
     });
 }
 
-// Export quotes to JSON file
-function exportQuotes() {
-    const blob = new Blob([JSON.stringify(quotes, null, 2)], { type: 'application/json' });
+// Function to export quotes to JSON
+function exportToJson() {
+    const json = JSON.stringify(quotes, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement('a');
     a.href = url;
     a.download = 'quotes.json';
@@ -95,19 +135,19 @@ function exportQuotes() {
     URL.revokeObjectURL(url);
 }
 
-// Import quotes from JSON file
+// Function to import quotes from JSON file
 function importFromJsonFile(event) {
     const fileReader = new FileReader();
     fileReader.onload = function(event) {
-        const importedQuotes = JSON.parse(event.target.result);
-        if (Array.isArray(importedQuotes)) {
-            quotes.length = 0;  // Clear current quotes
-            quotes.push(...importedQuotes);
+        try {
+            const importedQuotes = JSON.parse(event.target.result);
+            quotes = importedQuotes;
             saveQuotes();
-            populateCategories();  // Update category filter options
-            filterQuotes();  // Display quotes
-        } else {
-            alert('Invalid JSON file format.');
+            displayQuotes();
+            populateCategories();
+            alert('Quotes imported successfully!');
+        } catch (e) {
+            alert('Failed to import quotes. Please make sure the file is a valid JSON.');
         }
     };
     fileReader.readAsText(event.target.files[0]);
